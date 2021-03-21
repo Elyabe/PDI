@@ -6,7 +6,8 @@
 package pdi;
 
 import java.awt.image.BufferedImage;
-import infraBasica.PreProcessaImg;
+
+import infra.PreProcessaImg;
 
 /**
  *

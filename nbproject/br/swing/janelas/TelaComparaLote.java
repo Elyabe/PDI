@@ -10,10 +10,11 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 import pdi.CompareLimiarizacao;
-import infraBasica_conflito.ManipulaArquivo;
 import swing.JMainFrame;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import infra.ManipulaArquivo;
 
 /**
  *

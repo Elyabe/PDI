@@ -11,7 +11,8 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.event.InternalFrameAdapter;
-import infraBasica_conflito.ManipulaArquivo;
+
+import infra.ManipulaArquivo;
 import pdi.MorfologiaBinaria;
 import swing.JImageWindow;
 import swing.JMainFrame;

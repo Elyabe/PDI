@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package infraBasica_conflito;
+package infra;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;

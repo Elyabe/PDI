@@ -8,13 +8,21 @@ package swing.janelas;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
+import implementacoes.EyeMap;
+import implementacoes.EyeMapC;
+import implementacoes.EyeMapL;
 import implementacoes.Greenness;
-import infraBasica_conflito.ManipulaArquivo;
+import implementacoes.YCbCrImageConverter;
+import infra.ManipulaArquivo;
 import interfaces.ImageInterface;
 import swing.JMainFrame;
+import utils.ImageList;
+import utils.YCbCrSplitter;
 import pdi.PDIKmeansGray;
 
 /**
@@ -226,28 +234,35 @@ public class PDI_Lote extends javax.swing.JFrame {
                 if (!Paths.get(pastaSalvar).toFile().exists()) {
                     (new File(pastaSalvar)).mkdir();
                 }
-                //EXEMPLO DE T�CNICA QUE PRECISA DE UM PARAMETRO DE ENTRADA....
+
                 if (tecnica01.isSelected()) {
                     for (File pathtecnica01 : pathsOriginal) {
                         String imagevariavelK = pathtecnica01.getName();
-                        //DIVISAO DO NOME DA IMAGEM SEM SUA EXTENS�O PARA COMPAR��O FUTURA
                         imagevariavelK = imagevariavelK.substring(0, (imagevariavelK.length() - 4));
                         BufferedImage imgvariavelK = ImageIO.read(pathtecnica01);
-                        //Cria imagem resultante
-                        BufferedImage resvariavelK, outvariavelK = new BufferedImage(imgvariavelK.getWidth(), imgvariavelK.getHeight(), imgvariavelK.getType());
-                        //CRIA OBJETO DA CLASSE 
-                        //Neste exemplo, utiliza-se a t�cnica que est� na classe Greeness
-                        Greenness WA = new Greenness();
-                        //IMAGEM RESULTANTE DA FORMULA
-                        // ----- APLICACAO DA TECNICA -------
-                        resvariavelK = WA.GreennKG(imgvariavelK);
-                        //Nome que vai no nome do arquivo para identificar t�cnica.
-                        Nome = "_BHE2PL";
-                        //SAIDA CONTENDO CAMINHO DA IMAGEM + NOME DA IMAGEM
-                        String aSaida = pastaSalvar + imagevariavelK + Nome + ".png";
-                        File outputFile = new File(aSaida);
-                        //SALVA A IMAGEM
-                        ImageIO.write(resvariavelK, "png", outputFile);
+                        
+                        // YCbCrImageConverter yCbCrImageConverter = new YCbCrImageConverter();
+                        // ImageList yCbCrResults = yCbCrImageConverter.apply(imgvariavelK);
+                        
+                        // yCbCrResults.save(pastaSalvar + imagevariavelK);
+
+                        // BufferedImage yCbCrBuffImg = yCbCrResults.get("YCbCr");
+
+                        // EyeMapC eyeMapC = new EyeMapC();
+                        // ImageList EyeMapCComponents = eyeMapC.apply(yCbCrBuffImg);
+                        
+                        // EyeMapCComponents.save(pastaSalvar + imagevariavelK);
+                        
+                        // EyeMapL eyeMapL = new EyeMapL();
+                        
+                        // ImageList eyeMapLComponents = eyeMapL.apply(yCbCrResults.get("Y"));
+                        // eyeMapLComponents.save(pastaSalvar + imagevariavelK);
+
+                        EyeMap eyeMap = new EyeMap(pastaSalvar + imagevariavelK);
+                        
+                        ImageList eyeMapComponents = eyeMap.apply(imgvariavelK);
+
+                        eyeMapComponents.save(pastaSalvar + imagevariavelK);
                     }
                 }                
             } else {
