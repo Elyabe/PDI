@@ -32,4 +32,13 @@ public class ImageList {
             }
         });
     }
+
+    public HashMap<String, BufferedImage> putAll(ImageList source){
+        this.imageList.putAll(source.getImageList());
+        return this.imageList;
+    }
+
+    public HashMap<String, BufferedImage> getImageList(){
+        return this.imageList;
+    }
 }

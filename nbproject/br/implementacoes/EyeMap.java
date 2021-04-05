@@ -6,6 +6,7 @@ import java.awt.image.WritableRaster;
 import interfaces.ImageProcessor;
 import utils.ImageList;
 import utils.ScalarNormalizer;
+import utils.Util;
 import utils.YCbCrColor;
 
 public class EyeMap implements ImageProcessor {
@@ -21,25 +22,50 @@ public class EyeMap implements ImageProcessor {
         YCbCrImageConverter yCbCrImageConverter = new YCbCrImageConverter();
         ImageList yCbCrResults = yCbCrImageConverter.apply(inputBuffImg);
         
-        yCbCrResults.save(this.path);
+        // yCbCrResults.save(this.path);
 
         BufferedImage yCbCrBuffImg = yCbCrResults.get("YCbCr");
 
         EyeMapC eyeMapC = new EyeMapC();
         ImageList eyeMapCComponents = eyeMapC.apply(yCbCrBuffImg);
         
-        eyeMapCComponents.add("EyeMapCEqualized", this.equalize(eyeMapCComponents.get("EyeMapC")));
-        eyeMapCComponents.save(this.path);
+        // eyeMapCComponents.add("EyeMapCEqualized", this.equalize(eyeMapCComponents.get("EyeMapC")));
+        // eyeMapCComponents.save(this.path);
         
         EyeMapL eyeMapL = new EyeMapL();
         
         ImageList eyeMapLComponents = eyeMapL.apply(yCbCrResults.get("Y"));
-        eyeMapLComponents.save(this.path);
+        // eyeMapLComponents.save(this.path);
 
-        BufferedImage eyeMap = this.andOperator(eyeMapCComponents.get("EyeMapCEqualized"), eyeMapLComponents.get("EyeMapL"));
+        BufferedImage eyeMap = this.andOperator(eyeMapCComponents.get("EyeMapC"), eyeMapLComponents.get("EyeMapL"));
 
         ImageList eyeMapComponents = new ImageList();
         eyeMapComponents.add("EyeMap", eyeMap);
+        
+        BufferedImage dilatedEyeMap = Util.cloneBufferedImage(eyeMap);
+        StructuringElement structuringElement = new StructuringElement(3, "CIRCLE");
+        
+        GreyScaleDilation greyScaleDilation = new GreyScaleDilation(structuringElement);
+        GreyScaleErosion greyScaleErosion = new GreyScaleErosion(structuringElement);
+        
+        int MORPH_ITERATIONS = 4;
+        for(int iteration = 1; iteration <= MORPH_ITERATIONS ; iteration++)
+        {
+            dilatedEyeMap = greyScaleDilation.apply(dilatedEyeMap).get("Dilation");             
+        }
+     
+        // for(int iteration = 1; iteration <= MORPH_ITERATIONS ; iteration++)
+        // {
+        //     dilatedEyeMap = greyScaleErosion.apply(dilatedEyeMap).get("Erosion");             
+        // }
+        
+        if ( EyeMap.isDebug ){
+            eyeMapComponents.putAll(yCbCrResults);
+            eyeMapComponents.putAll(eyeMapCComponents);
+            eyeMapComponents.putAll(eyeMapLComponents);
+        }
+
+        eyeMapComponents.add("DilatedEyeMap", dilatedEyeMap);
 
         return eyeMapComponents;
     }
@@ -61,11 +87,13 @@ public class EyeMap implements ImageProcessor {
                 int ANormalizedColor = Math.round(scalarNormalizerBetween0_16.run((float)yCbcrColorImgA.getY()));
                 int BNormalizedColor = Math.round(scalarNormalizerBetween0_16.run((float)yCbcrColorImgB.getY()));
 
-                int AAndB = ANormalizedColor * BNormalizedColor;
+                // int AAndB = ANormalizedColor * BNormalizedColor;
+                // int AAndB = ANormalizedColor >= 8 && BNormalizedColor >= 8 ? ANormalizedColor * BNormalizedColor : 0;
+                int AAndB = yCbcrColorImgA.getY() & yCbcrColorImgB.getY();
 
-                if ( AAndB == 256 ){
-                    AAndB--;
-                }
+                // if ( AAndB == 256 ){
+                //     AAndB--;
+                // }
 
                 processedBuffImg.setRGB(x, y, yCbCrColorSpace.toRGB(AAndB));
             }

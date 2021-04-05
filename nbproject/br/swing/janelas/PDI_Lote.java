@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import implementacoes.EyeDetection;
 import implementacoes.EyeMap;
 import implementacoes.EyeMapC;
 import implementacoes.EyeMapL;
@@ -86,6 +87,8 @@ public class PDI_Lote extends javax.swing.JFrame {
             }
         });
 
+        CaminhoImagemOriginal.setText("/home/ellyabsson/Documents/PDI/15_2018EyeDetection/in");
+
         jLabel1.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Processamento de Imagens em Lote");
@@ -106,6 +109,8 @@ public class PDI_Lote extends javax.swing.JFrame {
             }
         });
 
+        CaminhoSaidaImagem.setText("/home/ellyabsson/Documents/PDI/15_2018EyeDetection/out");
+        
         jLabel3.setText("Escolha a Pasta de Saida");
 
         SaidaImagem.setText("Escolher a Pasta");
@@ -124,6 +129,7 @@ public class PDI_Lote extends javax.swing.JFrame {
             }
         });
 
+        tecnica01.setSelected(true);
         Processar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         Processar.setText("Processar");
         Processar.addActionListener(new java.awt.event.ActionListener() {
@@ -258,11 +264,17 @@ public class PDI_Lote extends javax.swing.JFrame {
                         // ImageList eyeMapLComponents = eyeMapL.apply(yCbCrResults.get("Y"));
                         // eyeMapLComponents.save(pastaSalvar + imagevariavelK);
 
-                        EyeMap eyeMap = new EyeMap(pastaSalvar + imagevariavelK);
+                        // EyeMap eyeMap = new EyeMap(pastaSalvar + imagevariavelK);
                         
-                        ImageList eyeMapComponents = eyeMap.apply(imgvariavelK);
+                        // ImageList eyeMapComponents = eyeMap.apply(imgvariavelK);
 
-                        eyeMapComponents.save(pastaSalvar + imagevariavelK);
+                        // eyeMapComponents.save(pastaSalvar + imagevariavelK);
+                 
+                        EyeDetection eyeDetection = new EyeDetection(pastaSalvar + imagevariavelK);
+                        
+                        ImageList eyeDetectionComponents = eyeDetection.apply(imgvariavelK);
+
+                        eyeDetectionComponents.save(pastaSalvar + imagevariavelK);
                     }
                 }                
             } else {
